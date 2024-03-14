@@ -1,0 +1,137 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    background-image: linear-gradient(
+        to top,
+        #fafbfb 0%,
+        color(srgb 0.6137 0.8201 0.9252) 100%
+    );
+    color: color(srgb 0.1573 0.2253 0.26);
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    width: 100%;
+    padding: 3px;
+    margin: 0;
+}
+
+body {
+    min-height: calc(100dvh - 6px);
+}
+
+svg {
+    height: 24px;
+    width: 24px;
+}
+
+img {
+    height: 100px;
+    width: 100px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    & li {
+        display: inline-block;
+        margin: 15px;
+        & a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+    }
+}
+
+@media screen and (max-width: 450px) {
+    ul {
+        & li {
+            width: auto;
+            text-align: center;
+            display: block;
+        }
+    }
+}
+
+button {
+    background: none;
+    border: 0;
+    color: currentcolor;
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+button:hover {
+    background-color: #00000010;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    min-height: 70px;
+    align-items: flex-start;
+}
+
+nav {
+    padding: 20px 0;
+    min-height: 100px;
+    & a:hover {
+        text-decoration: underline;
+    }
+}
+
+main {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    & p {
+        margin: 0;
+    }
+}
+
+#theme-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    & div {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        font-size: 24px;
+    }
+}
+
+html.dark,
+html.dark body {
+    background-image: linear-gradient(#081233, #1e293b);
+    color: #c9cdda;
+
+    & button:hover {
+        background-color: #ffffff10;
+    }
+}
