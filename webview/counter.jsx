@@ -43,7 +43,7 @@ function Counter() {
     const incr = () => setCount(count + 1);
     const reset = () =>
         rpc()
-            .count.reset()
+            .fs.unlink(countFile)
             .then(() => setCount(0));
 
     return (
