@@ -1,6 +1,6 @@
 const themeSwitch = document.querySelector("#theme-switch input");
 
-const themeFile = "data/theme";
+const themeFile = "data/theme.txt";
 await rpc().fs.mkdir("data");
 
 async function loadTheme(){
