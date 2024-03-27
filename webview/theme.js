@@ -1,6 +1,15 @@
 const themeSwitch = document.querySelector("#theme-switch input");
 
-const startDark = !!parseInt(await rpc().theme.isDark());
+const themeFile = "data/theme.txt";
+await rpc().fs.mkdir("data");
+
+async function loadTheme() {
+    if (!(await rpc().fs.exists(themeFile))) return "0";
+
+    return await rpc().fs.readFile(themeFile, { encoding: "utf8" });
+}
+
+const startDark = !!parseInt(await loadTheme());
 if (startDark) {
     document.documentElement.classList.add("dark");
     themeSwitch.checked = false;
@@ -14,5 +23,5 @@ themeSwitch.addEventListener("change", (e) => {
         document.documentElement.classList.remove("dark");
     }
 
-    rpc().theme.saveDark(isDark ? "1" : "0");
+    rpc().fs.writeFile(themeFile, isDark ? "1" : "0");
 });

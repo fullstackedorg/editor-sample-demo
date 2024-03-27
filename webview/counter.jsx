@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { randomElement } from "../utils/random.js";
 
+const countFile = "data/count.txt";
+await rpc().fs.mkdir("data");
+
 function Icon(props) {
     const [icon, setIcon] = useState("");
 
@@ -14,17 +17,21 @@ function Icon(props) {
     return <span dangerouslySetInnerHTML={{ __html: icon }} />;
 }
 
+async function loadCount() {
+    if (!(await rpc().fs.exists(countFile))) return 0;
+
+    return parseInt(await rpc().fs.readFile(countFile, { encoding: "utf8" }));
+}
+
 function Counter() {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        rpc()
-            .count.load()
-            .then((savedCount) => setCount(parseInt(savedCount)));
+        loadCount().then((savedCount) => setCount(savedCount));
     }, []);
 
     useEffect(() => {
-        if (count) rpc().count.save(count.toString());
+        if (count) rpc().fs.writeFile(countFile, count.toString());
 
         if (count % 3 === 1) console.log(randomElement(chatGPTQuotes));
     }, [count]);
@@ -33,7 +40,7 @@ function Counter() {
     const incr = () => setCount(count + 1);
     const reset = () =>
         rpc()
-            .count.reset()
+            .fs.unlink(countFile)
             .then(() => setCount(0));
 
     return (
