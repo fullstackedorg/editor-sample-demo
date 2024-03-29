@@ -2,4 +2,4 @@
 
 Open this project in FullStacked
 
-[![Open in FullStacked](https://raw.githubusercontent.com/fullstackedorg/website/main/open-in-fullstacked.svg)](https://fullstacked.org/share?git=https://github.com/fullstackedorg/editor-sample-demo.git?title=Demo)
+[![Open in FullStacked](https://share.fullstacked.org/open-in-fullstacked.svg)](https://share.fullstacked.org?git=https://github.com/fullstackedorg/editor-sample-demo.git?title=Demo)
