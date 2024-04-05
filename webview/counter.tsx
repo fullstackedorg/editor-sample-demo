@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { randomElement } from "../utils/random.js";
+import { randomElement } from "../utils/random";
+
+declare var rpc: any;
 
 const countFile = "data/count.txt";
 await rpc().fs.mkdir("data");
 
-function Icon(props) {
+function Icon(props: { iconName: string }) {
     const [icon, setIcon] = useState("");
 
     useEffect(() => {
@@ -102,3 +104,4 @@ const chatGPTQuotes = [
     "Clicking with style, grace, and a touch of humor. That's how it's done!",
     "Clicking buttons with the precision of a surgeon. You're saving lives, one click at a time!"
 ];
+
