@@ -1,4 +1,6 @@
-const themeSwitch = document.querySelector("#theme-switch input");
+const themeSwitch = document.querySelector<HTMLInputElement>("#theme-switch input");
+
+declare var rpc: any;
 
 const themeFile = "data/theme.txt";
 await rpc().fs.mkdir("data");
@@ -16,7 +18,7 @@ if (startDark) {
 }
 
 themeSwitch.addEventListener("change", (e) => {
-    const isDark = !e.currentTarget.checked;
+    const isDark = !(e.currentTarget as HTMLInputElement).checked;
     if (isDark) {
         document.documentElement.classList.add("dark");
     } else {
@@ -25,3 +27,6 @@ themeSwitch.addEventListener("change", (e) => {
 
     rpc().fs.writeFile(themeFile, isDark ? "1" : "0");
 });
+
+export {}
+
