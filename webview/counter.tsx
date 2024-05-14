@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { randomElement } from "../utils/random";
 
-declare var rpc: any;
-
 const countFile = "data/count.txt";
 await rpc().fs.mkdir("data");
 

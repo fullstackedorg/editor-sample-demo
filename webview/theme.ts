@@ -1,14 +1,12 @@
 const themeSwitch = document.querySelector<HTMLInputElement>("#theme-switch input");
 
-declare var rpc: any;
-
 const themeFile = "data/theme.txt";
 await rpc().fs.mkdir("data");
 
 async function loadTheme() {
     if (!(await rpc().fs.exists(themeFile))) return "0";
 
-    return await rpc().fs.readFile(themeFile, { encoding: "utf8" });
+    return rpc().fs.readFile(themeFile, { encoding: "utf8" });
 }
 
 const startDark = !!parseInt(await loadTheme());
