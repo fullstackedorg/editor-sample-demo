@@ -102,4 +102,3 @@ const chatGPTQuotes = [
     "Clicking with style, grace, and a touch of humor. That's how it's done!",
     "Clicking buttons with the precision of a surgeon. You're saving lives, one click at a time!"
 ];
-

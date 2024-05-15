@@ -1,4 +1,6 @@
-const themeSwitch = document.querySelector<HTMLInputElement>("#theme-switch input");
+const themeSwitch = document.querySelector<HTMLInputElement>(
+    "#theme-switch input"
+);
 
 const themeFile = "data/theme.txt";
 await rpc().fs.mkdir("data");
@@ -26,5 +28,4 @@ themeSwitch.addEventListener("change", (e) => {
     rpc().fs.writeFile(themeFile, isDark ? "1" : "0");
 });
 
-export {}
-
+export {};

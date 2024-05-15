@@ -6,4 +6,3 @@ document.querySelectorAll(".icon").forEach(async (icon) => {
         await fetch(`assets/images/${iconName}.svg`)
     ).text();
 });
-
