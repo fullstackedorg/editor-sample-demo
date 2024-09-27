@@ -9,7 +9,7 @@ let id: string;
 if (await rpc().fs.exists(idFile)) {
     id = await rpc().fs.readFile(idFile, { encoding: "utf8" });
 } else {
-    id = (Math.random() * 10000).toString();
+    id = Math.floor(Math.random() * 10000).toString();
     await rpc().fs.writeFile(idFile, id);
 }
 
@@ -54,6 +54,7 @@ function Counter() {
     }, []);
 
     useEffect(() => {
+        console.log(counter);
         rpc().fs.writeFile(countFile, counter[id].toString());
     }, [counter]);
 
