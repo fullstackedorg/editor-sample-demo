@@ -35,6 +35,16 @@ type CountCRDT = {
     [id: string]: number;
 };
 
+let throttler: ReturnType<typeof setTimeout> = null;
+const sendCount = (count: number) => {
+    if(throttler) clearTimeout(throttler);
+    
+    throttler = setTimeout(() => {
+        rpc().broadcast(JSON.stringify({ id, count }));
+        throttler = null;
+    }, 750);
+};
+
 const initialCount = await loadCount();
 function Counter() {
     const [counter, setCounter] = useState<CountCRDT>({
@@ -42,43 +52,44 @@ function Counter() {
     });
 
     useEffect(() => {
-        rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
+        sendCount(counter[id]);
     }, []);
 
     useEffect(() => {
         window.onPush["peerData"] = (message: string) => {
             const peerCount = JSON.parse(message);
 
-            if(counter[peerCount.id] === undefined) {
-                rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
+            if (counter[peerCount.id] === undefined) {
+                sendCount(counter[id]);
             }
-            
+
             counter[peerCount.id] = peerCount.count;
             setCounter({ ...counter });
         };
-        
+
         rpc().fs.writeFile(countFile, counter[id].toString());
     }, [counter]);
 
     const decr = () => {
         counter[id] -= 1;
         setCounter({ ...counter });
-        rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
+        sendCount(counter[id]);
     };
     const incr = () => {
         counter[id] += 1;
         setCounter({ ...counter });
-        rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
-    }
+        sendCount(counter[id]);
+    };
     const reset = () => {
-        rpc().fs.unlink(countFile)
+        rpc()
+            .fs.unlink(countFile)
             .then(() => {
                 setCounter({
                     [id]: 0
                 });
-                rpc().broadcast(JSON.stringify({ id, count: 0 }))
-            })
-    }
+                sendCount(0);
+            });
+    };
 
     return (
         <>
@@ -86,7 +97,9 @@ function Counter() {
                 <button onClick={decr}>
                     <Icon iconName={"minus"} />
                 </button>
-                <div>{Object.values(counter).reduce((tot, count) => tot + count)}</div>
+                <div>
+                    {Object.values(counter).reduce((tot, count) => tot + count)}
+                </div>
                 <button onClick={incr}>
                     <Icon iconName={"plus"} />
                 </button>
