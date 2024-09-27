@@ -48,7 +48,11 @@ function Counter() {
     useEffect(() => {
         window.onPush["peerData"] = (message: string) => {
             const peerCount = JSON.parse(message);
-            console.log(peerCount)
+
+            if(counter[peerCount.id] === undefined) {
+                rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
+            }
+            
             counter[peerCount.id] = peerCount.count;
             setCounter({ ...counter });
         };
