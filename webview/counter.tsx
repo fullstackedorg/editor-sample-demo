@@ -2,7 +2,16 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
 const countFile = "data/count.txt";
+const idFile = "data/id.txt";
 await rpc().fs.mkdir("data");
+
+let id: string;
+if (await rpc().fs.exists(idFile)) {
+    id = await rpc().fs.readFile(idFile, { encoding: "utf8" });
+} else {
+    id = (Math.random() * 10000).toString();
+    await rpc().fs.writeFile(idFile, id);
+}
 
 function Icon(props: { iconName: string }) {
     const [icon, setIcon] = useState("");
@@ -22,55 +31,51 @@ async function loadCount() {
     return parseInt(await rpc().fs.readFile(countFile, { encoding: "utf8" }));
 }
 
+type CountCRDT = {
+    [id: string]: number;
+};
+
+const initialCount = await loadCount();
+const calcTotalCount = (counter: CountCRDT) =>
+    Object.values(counter).reduce((tot, count) => tot + count);
 function Counter() {
-    const [count, setCount] = useState({
-        value: 0,
-        fromPeer: false
+    const [counter, setCounter] = useState<CountCRDT>({
+        [id]: initialCount
     });
 
     useEffect(() => {
-        loadCount().then((savedCount) =>
-            setCount({
-                value: savedCount,
-                fromPeer: false
-            })
-        );
-
-        window.onPush["peerData"] = (count: string) => {
-            setCount({
-                value: parseInt(count),
-                fromPeer: true
-            });
+        window.onPush["peerData"] = (message: string) => {
+            const { id, count } = JSON.parse(message);
+            counter[id] = count;
+            setCounter({ ...counter });
         };
+        
+        rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
     }, []);
 
     useEffect(() => {
-        if (count.value) rpc().fs.writeFile(countFile, count.value.toString());
+        rpc().fs.writeFile(countFile, counter[id].toString());
+    }, [counter]);
 
-        if (count.fromPeer) return;
-
-        rpc().broadcast(count.value.toString());
-    }, [count]);
-
-    const decr = () =>
-        setCount({
-            value: count.value - 1,
-            fromPeer: false
-        });
-    const incr = () =>
-        setCount({
-            value: count.value + 1,
-            fromPeer: false
-        });
-    const reset = () =>
-        rpc()
-            .fs.unlink(countFile)
-            .then(() =>
-                setCount({
-                    value: 0,
-                    fromPeer: false
-                })
-            );
+    const decr = () => {
+        counter[id] -= 1;
+        setCounter({ ...counter });
+        rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
+    };
+    const incr = () => {
+        counter[id] += 1;
+        setCounter({ ...counter });
+        rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
+    }
+    const reset = () => {
+        rpc().fs.unlink(countFile)
+            .then(() => {
+                setCounter({
+                    [id]: 0
+                });
+                rpc().broadcast(JSON.stringify({ id, count: 0 }))
+            })
+    }
 
     return (
         <>
@@ -78,7 +83,7 @@ function Counter() {
                 <button onClick={decr}>
                     <Icon iconName={"minus"} />
                 </button>
-                <div>{count.value}</div>
+                <div>{calcTotalCount(counter)}</div>
                 <button onClick={incr}>
                     <Icon iconName={"plus"} />
                 </button>
