@@ -36,25 +36,23 @@ type CountCRDT = {
 };
 
 const initialCount = await loadCount();
-const calcTotalCount = (counter: CountCRDT) =>
-    Object.values(counter).reduce((tot, count) => tot + count);
 function Counter() {
     const [counter, setCounter] = useState<CountCRDT>({
         [id]: initialCount
     });
 
     useEffect(() => {
-        window.onPush["peerData"] = (message: string) => {
-            const { id, count } = JSON.parse(message);
-            counter[id] = count;
-            setCounter({ ...counter });
-        };
-        
         rpc().broadcast(JSON.stringify({ id, count: counter[id] }))
     }, []);
 
     useEffect(() => {
-        console.log(counter);
+        window.onPush["peerData"] = (message: string) => {
+            const peerCount = JSON.parse(message);
+            console.log(peerCount)
+            counter[peerCount.id] = peerCount.count;
+            setCounter({ ...counter });
+        };
+        
         rpc().fs.writeFile(countFile, counter[id].toString());
     }, [counter]);
 
@@ -84,7 +82,7 @@ function Counter() {
                 <button onClick={decr}>
                     <Icon iconName={"minus"} />
                 </button>
-                <div>{calcTotalCount(counter)}</div>
+                <div>{Object.values(counter).reduce((tot, count) => tot + count)}</div>
                 <button onClick={incr}>
                     <Icon iconName={"plus"} />
                 </button>
