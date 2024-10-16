@@ -1,0 +1,7 @@
+{
+    "id": "org.fullstacked.demo",
+    "title": "Demo",
+    "git": {
+        "repo": "https://github.com/fullstackedorg/editor-sample-demo.git"
+    }
+}
