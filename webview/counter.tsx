@@ -3,14 +3,14 @@ import { createRoot } from "react-dom/client";
 
 const countFile = "data/count.txt";
 const idFile = "data/id.txt";
-await rpc().fs.mkdir("data");
+await ipc.fs.mkdir("data");
 
 let id: string;
-if (await rpc().fs.exists(idFile)) {
-    id = await rpc().fs.readFile(idFile, { encoding: "utf8" });
+if (await ipc.fs.exists(idFile)) {
+    id = await ipc.fs.readFile(idFile, { encoding: "utf8" });
 } else {
     id = Math.floor(Math.random() * 10000).toString();
-    await rpc().fs.writeFile(idFile, id);
+    await ipc.fs.writeFile(idFile, id);
 }
 
 function Icon(props: { iconName: string }) {
@@ -26,24 +26,24 @@ function Icon(props: { iconName: string }) {
 }
 
 async function loadCount() {
-    if (!(await rpc().fs.exists(countFile))) return 0;
+    if (!(await ipc.fs.exists(countFile))) return 0;
 
-    return parseInt(await rpc().fs.readFile(countFile, { encoding: "utf8" }));
+    return parseInt(await ipc.fs.readFile(countFile, { encoding: "utf8" }));
 }
 
 type CountCRDT = {
     [id: string]: number;
 };
 
-let throttler: ReturnType<typeof setTimeout> = null;
-const sendCount = (count: number) => {
-    if(throttler) clearTimeout(throttler);
+// let throttler: ReturnType<typeof setTimeout> = null;
+// const sendCount = (count: number) => {
+//     if(throttler) clearTimeout(throttler);
     
-    throttler = setTimeout(() => {
-        rpc().broadcast(JSON.stringify({ id, count }));
-        throttler = null;
-    }, 750);
-};
+//     throttler = setTimeout(() => {
+//         ipc.broadcast(JSON.stringify({ id, count }));
+//         throttler = null;
+//     }, 750);
+// };
 
 const initialCount = await loadCount();
 function Counter() {
@@ -51,23 +51,23 @@ function Counter() {
         [id]: initialCount
     });
 
-    useEffect(() => {
-        sendCount(counter[id]);
-    }, []);
+    // useEffect(() => {
+    //     sendCount(counter[id]);
+    // }, []);
 
     useEffect(() => {
-        window.onPush["peerData"] = (message: string) => {
-            const peerCount = JSON.parse(message);
+        // window.onPush["peerData"] = (message: string) => {
+        //     const peerCount = JSON.parse(message);
 
-            if (counter[peerCount.id] === undefined) {
-                sendCount(counter[id]);
-            }
+        //     if (counter[peerCount.id] === undefined) {
+        //         sendCount(counter[id]);
+        //     }
 
-            counter[peerCount.id] = peerCount.count;
-            setCounter({ ...counter });
-        };
+        //     counter[peerCount.id] = peerCount.count;
+        //     setCounter({ ...counter });
+        // };
 
-        rpc().fs.writeFile(countFile, counter[id].toString());
+        ipc.fs.writeFile(countFile, counter[id].toString());
     }, [counter]);
 
     const decr = () => {
@@ -81,7 +81,7 @@ function Counter() {
         sendCount(counter[id]);
     };
     const reset = () => {
-        rpc()
+        ipc
             .fs.unlink(countFile)
             .then(() => {
                 setCounter({

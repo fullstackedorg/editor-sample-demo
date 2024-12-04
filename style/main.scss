@@ -2,8 +2,21 @@
     box-sizing: border-box;
 }
 
+@media (prefers-color-scheme: light) {
+    html, body {
+        background-color: #9cd1ec;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html, body {
+        background-color: #081233;
+    }
+}
+
 html,
 body {
+    
     background-image: linear-gradient(
         to top,
         #fafbfb 0%,
