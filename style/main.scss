@@ -129,7 +129,14 @@ main {
     align-items: center;
     justify-content: center;
     & p {
-        margin: 0;
+        margin-top: 0;
+        span {
+            font-family: monospace;
+            background-color: lightgray;
+            padding: 3px 8px;
+            border-radius: 3px;
+            color: black;
+        }
     }
 }
 

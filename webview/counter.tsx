@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import fs from "fs";
 
 const countFile = "data/count.txt";
 const idFile = "data/id.txt";
-await ipc.fs.mkdir("data");
+await fs.mkdir("data");
 
 let id: string;
-if (await ipc.fs.exists(idFile)) {
-    id = await ipc.fs.readFile(idFile, { encoding: "utf8" });
+if (await fs.exists(idFile)) {
+    id = await fs.readFile(idFile, { encoding: "utf8" });
 } else {
     id = Math.floor(Math.random() * 10000).toString();
-    await ipc.fs.writeFile(idFile, id);
+    await fs.writeFile(idFile, id);
 }
 
 function Icon(props: { iconName: string }) {
@@ -26,9 +27,9 @@ function Icon(props: { iconName: string }) {
 }
 
 async function loadCount() {
-    if (!(await ipc.fs.exists(countFile))) return 0;
+    if (!(await fs.exists(countFile))) return 0;
 
-    return parseInt(await ipc.fs.readFile(countFile, { encoding: "utf8" }));
+    return parseInt(await fs.readFile(countFile, { encoding: "utf8" }));
 }
 
 type CountCRDT = {
@@ -40,7 +41,7 @@ type CountCRDT = {
 //     if(throttler) clearTimeout(throttler);
     
 //     throttler = setTimeout(() => {
-//         ipc.broadcast(JSON.stringify({ id, count }));
+//         broadcast(JSON.stringify({ id, count }));
 //         throttler = null;
 //     }, 750);
 // };
@@ -67,7 +68,7 @@ function Counter() {
         //     setCounter({ ...counter });
         // };
 
-        ipc.fs.writeFile(countFile, counter[id].toString());
+        fs.writeFile(countFile, counter[id].toString());
     }, [counter]);
 
     const decr = () => {
