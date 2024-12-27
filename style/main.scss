@@ -2,8 +2,21 @@
     box-sizing: border-box;
 }
 
+@media (prefers-color-scheme: light) {
+    html, body {
+        background-color: #9cd1ec;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html, body {
+        background-color: #081233;
+    }
+}
+
 html,
 body {
+    
     background-image: linear-gradient(
         to top,
         #fafbfb 0%,
@@ -116,7 +129,14 @@ main {
     align-items: center;
     justify-content: center;
     & p {
-        margin: 0;
+        margin-top: 0;
+        span {
+            font-family: monospace;
+            background-color: lightgray;
+            padding: 3px 8px;
+            border-radius: 3px;
+            color: black;
+        }
     }
 }
 

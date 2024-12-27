@@ -1,14 +1,18 @@
+import fs from "fs";
+
 const themeSwitch = document.querySelector<HTMLInputElement>(
     "#theme-switch input"
 );
 
 const themeFile = "data/theme.txt";
-await rpc().fs.mkdir("data");
+await fs.mkdir("data");
 
 async function loadTheme() {
-    if (!(await rpc().fs.exists(themeFile))) return "0";
+    if (!(await fs.exists(themeFile))) {
+        return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? "1" : "0";
+    }
 
-    return rpc().fs.readFile(themeFile, { encoding: "utf8" });
+    return fs.readFile(themeFile, { encoding: "utf8" });
 }
 
 const startDark = !!parseInt(await loadTheme());
@@ -25,7 +29,5 @@ themeSwitch.addEventListener("change", (e) => {
         document.documentElement.classList.remove("dark");
     }
 
-    rpc().fs.writeFile(themeFile, isDark ? "1" : "0");
+    fs.writeFile(themeFile, isDark ? "1" : "0");
 });
-
-export {};
