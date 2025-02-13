@@ -1,6 +1,46 @@
 {
     "packages": [
         {
+            "name": "@types/prop-types",
+            "version": "15.7.14",
+            "as": [
+                "*"
+            ],
+            "location": [
+                "node_modules"
+            ]
+        },
+        {
+            "name": "@types/react",
+            "version": "18.3.18",
+            "as": [
+                "^18.3.18"
+            ],
+            "location": [
+                "node_modules"
+            ]
+        },
+        {
+            "name": "@types/react-dom",
+            "version": "18.3.5",
+            "as": [
+                "^18.3.5"
+            ],
+            "location": [
+                "node_modules"
+            ]
+        },
+        {
+            "name": "csstype",
+            "version": "3.1.3",
+            "as": [
+                "^3.0.2"
+            ],
+            "location": [
+                "node_modules"
+            ]
+        },
+        {
             "name": "js-tokens",
             "version": "4.0.0",
             "as": [
